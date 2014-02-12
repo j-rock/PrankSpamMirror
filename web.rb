@@ -1,5 +1,6 @@
 require 'sinatra'
 require 'twilio-ruby'
+require_relative 'config'
 
 set :environment, :production
 set :raise_exceptions, :false
@@ -22,14 +23,14 @@ post '/phone' do
     input = Rack::Utils.escape_html(params[:phone_number])
     phone = grabDigits(input)
     raise Exception unless acceptable? phone
-    account_sid = #TWILIO ACCOUNT SID
-    auth_token = #TWILIO AUTH TOKEN
+    account_sid = TWILIO_ACCOUNT_SID
+    auth_token = TWILIO_AUTH_TOKEN
     @client = Twilio::REST::Client.new account_sid, auth_token
     @call = @client.account.calls.create(
       :method => 'get',
-      :from => #TWILIO MOBILE PHONE
+      :from => TWILIO_MOBILE_PHONE,
       :to => "+#{phone}",
-      :url => #URL TO MP3
+      :url => URL_TO_MP3
     )
   rescue Exception
     redirect to('/error')  
